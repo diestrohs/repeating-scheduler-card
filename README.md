@@ -33,10 +33,7 @@ Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende La
      time: time.evcc_{vehicle}_repeating_plan_{index}_time
      soc: number.evcc_{vehicle}_repeating_plan_{index}_soc
      active: switch.evcc_{vehicle}_repeating_plan_{index}_active
-   connection_type: scan # oder websocket
-   ws_domain: evcc_scheduler
-   add_service: evcc_scheduler.set_repeating_plan # scan: Service, websocket: WebSocket-API
-   delete_service: evcc_scheduler.del_repeating_plan # scan: Service, websocket: WebSocket-API
+   # (keine weiteren Parameter nötig)
    ```
 
 
@@ -44,7 +41,6 @@ Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende La
 
 - Entity-Topology-Detection: Card erkennt automatisch, wenn Plan-Entities hinzugefügt oder gelöscht werden (kein Polling, keine Backend-WS nötig)
 - State-Änderungen werden wie gewohnt über hass-Objekt propagiert (Home Assistant WebSocket API)
-- Umschaltung zwischen scan und websocket über connection_type
 - Fahrzeugerkennung: vehicle_attribute optional, sonst Entity-State
 - Hinzufügen/Löschen: scan → Service, websocket → WebSocket-API
 - Styles werden als JS-Konstanten in den Komponenten verwaltet

@@ -73,13 +73,8 @@ class RepeatingSchedulerCard extends LitElement {
   }
 
   setConfig(config) {
-    // Entferne WebSocket-Parameter aus der Config
-    const { connection_type, ws_domain, ...rest } = config;
-    this.config = {
-      add_service: "evcc_scheduler.set_repeating_plan",
-      delete_service: "evcc_scheduler.del_repeating_plan",
-      ...rest
-    };
+    // Nur relevante UI-Parameter übernehmen
+    this.config = { ...config };
   }
 
   getEvccName() {
@@ -98,15 +93,20 @@ class RepeatingSchedulerCard extends LitElement {
 
   updated(changed) {
     if (!changed.has("hass")) return;
-    // Bootstrap: Pläne initial aus Entities extrahieren
-    if (!this._bootstrapped) {
-      const vehicle = this.getVehicle();
-      if (vehicle) {
-        this._plans = this.collectPlans(vehicle);
-        this._bootstrapped = true;
-        this.requestUpdate();
-      }
+    const vehicle = this.getVehicle();
+    if (!vehicle) return;
+
+    // Entity topology detection: hash of all relevant entity_ids
+    const entityIds = Object.keys(this.hass.states)
+      .filter(id => id.includes(vehicle))
+      .sort()
+      .join("|");
+    if (entityIds !== this._entityTopology) {
+      this._entityTopology = entityIds;
+      this._plans = this.collectPlans(vehicle);
+      this.requestUpdate();
     }
+
     // re-propagate hass to all plan-nodes
     this.renderRoot.querySelectorAll("repeating-plan-node").forEach(node => {
       node.hass = this.hass;
