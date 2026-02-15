@@ -22,7 +22,7 @@ Diese Card benötigt folgende Custom Cards, die separat installiert werden müss
 Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende Ladepläne – 100% Entity-Driven, keine Polls, keine Backend-WS nötig.
 
 ## Features
-- 100% Entity-Driven: Card erkennt neue/löschte Pläne sofort (Entity-Prefix-Detection, keine Scans)
+- 100% Entity-Driven: Card erkennt neue/gelöschte Pläne sofort (Entity-Prefix-Detection, keine Scans)
 - Zero-Scan Architektur: keine Polls, keine Backend-WS, keine Events nötig
 - Echtzeit-Updates: State- und Entity-Änderungen werden sofort reflektiert
 - Modular: PlanNode-Komponenten, Shared Styles
