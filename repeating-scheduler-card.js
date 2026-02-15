@@ -104,21 +104,22 @@ class RepeatingSchedulerCard extends LitElement {
     const vehicle = this.getVehicle();
     if (!vehicle) return;
 
+    // ---- Topology check (Plan hinzu/entfernt)
     const prefix = this._getPlanPrefix(vehicle);
-    const relevantIds = Object.keys(this.hass.states)
+    const topology = Object.keys(this.hass.states)
       .filter(id => id.includes(prefix))
       .sort()
       .join("|");
 
-    if (relevantIds !== this._entityTopology) {
-      this._entityTopology = relevantIds;
+    if (topology !== this._entityTopology) {
+      this._entityTopology = topology;
       this._plans = this.collectPlans(vehicle);
     }
 
-    // re-propagate hass
-    this.renderRoot.querySelectorAll("repeating-plan-node").forEach(node => {
-      node.hass = this.hass;
-    });
+    // ---- State propagation (IMMER!)
+    this.renderRoot
+      .querySelectorAll("repeating-plan-node")
+      .forEach(node => node.hass = this.hass);
   }
 
   render() {

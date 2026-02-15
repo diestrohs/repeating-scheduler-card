@@ -1,28 +1,10 @@
-## Abhängigkeiten
-
-Diese Card benötigt folgende Custom Cards, die separat installiert werden müssen:
-
-- **[multiselect-dropdown](https://github.com/rogro82/hass-custom-multiselect-dropdown)**
-    - Für die Auswahl der Wochentage (`custom:multiselect-dropdown`)
-- **[time-spinner-card](https://github.com/amaximus/time-spinner-card)**
-    - Für die Zeitauswahl (`custom:time-spinner-card`)
-- **[card-mod](https://github.com/thomasloven/lovelace-card-mod)**
-    - Für individuelles Styling der Subcards
-- **Home Assistant Core Tile Card** (ab 2023.11, für SoC/Schalter)
-    - Wird für SoC und Aktiv-Status verwendet (`type: tile`)
-
-**Installation:**
-1. Die oben genannten Custom Cards gemäß deren Dokumentation installieren (meist via HACS oder manuell in `config/www/`)
-2. Home Assistant neustarten und ggf. Ressourcen im Frontend einbinden
-3. Erst dann die Repeating Scheduler Card wie oben beschrieben einbinden
-
 
 # Repeating Scheduler Card
 
 Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende Ladepläne – 100% Entity-Driven, keine Polls, keine Backend-WS nötig.
 
 ## Features
-- 100% Entity-Driven: Card erkennt neue/gelöschte Pläne sofort (Entity-Prefix-Detection, keine Scans)
+- 100% Entity-Driven: Card erkennt neue/löschte Pläne sofort (Entity-Prefix-Detection, keine Scans)
 - Zero-Scan Architektur: keine Polls, keine Backend-WS, keine Events nötig
 - Echtzeit-Updates: State- und Entity-Änderungen werden sofort reflektiert
 - Modular: PlanNode-Komponenten, Shared Styles
@@ -55,9 +37,15 @@ Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende La
    # add_service: evcc_scheduler.set_repeating_plan
    # delete_service: evcc_scheduler.del_repeating_plan
 
+
+## Release 0.0.7
+- Architektur-Update: hass-Objekt wird jetzt immer korrekt an Child Cards propagiert (über updated()), unabhängig von Topologie-Änderungen
+- Kein Flicker, keine unnötigen DOM-Rebuilds – UI bleibt stabil und reaktiv
+- Lovelace-konformes, hass-driven Update-Pattern (wie HA-Core Cards)
+- Topologie- und State-Updates sauber getrennt
+- Bugfix: Child Cards werden bei Entity-Änderungen wieder zuverlässig aktualisiert
+
 ## Release 0.0.5
-- Neue Pläne werden jetzt standardmäßig als inaktiv (active: false) angelegt
-- PlanNode und Scheduler-Card reagieren nur noch auf relevante Entity-Änderungen (maximale Performance, kein Flicker)
     ```
 
 
