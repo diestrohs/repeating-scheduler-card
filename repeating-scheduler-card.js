@@ -99,9 +99,31 @@ class RepeatingSchedulerCard extends LitElement {
 
 
 
+  updated(changed) {
+    if (!changed.has("hass")) return;
+    const vehicle = this.getVehicle();
+    if (!vehicle) return;
+
+    const prefix = this._getPlanPrefix(vehicle);
+    const relevantIds = Object.keys(this.hass.states)
+      .filter(id => id.includes(prefix))
+      .sort()
+      .join("|");
+
+    if (relevantIds !== this._entityTopology) {
+      this._entityTopology = relevantIds;
+      this._plans = this.collectPlans(vehicle);
+    }
+
+    // re-propagate hass
+    this.renderRoot.querySelectorAll("repeating-plan-node").forEach(node => {
+      node.hass = this.hass;
+    });
+  }
+
   render() {
     const vehicle = this.getVehicle();
-    const plans = vehicle ? this.collectPlans(vehicle) : [];
+    const plans = this._plans || [];
     return html`
       <ha-card>
         <div class="title">Repeating Scheduler</div>
@@ -137,7 +159,7 @@ class RepeatingSchedulerCard extends LitElement {
                 time: "07:00",
                 weekdays: [1,2,3,4,5],
                 soc: 80,
-                active: true
+                active: false
               }
             );
           }}

@@ -33,9 +33,13 @@ Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende La
        time: time.evcc_{vehicle}_repeating_plan_{index}_time
        soc: number.evcc_{vehicle}_repeating_plan_{index}_soc
        active: switch.evcc_{vehicle}_repeating_plan_{index}_active
-    # Optional für maximale Flexibilität (Standard siehe Code):
-    # add_service: evcc_scheduler.set_repeating_plan
-    # delete_service: evcc_scheduler.del_repeating_plan
+   # Optional für maximale Flexibilität (Standard siehe Code):
+   # add_service: evcc_scheduler.set_repeating_plan
+   # delete_service: evcc_scheduler.del_repeating_plan
+
+## Release 0.0.5
+- Neue Pläne werden jetzt standardmäßig als inaktiv (active: false) angelegt
+- PlanNode und Scheduler-Card reagieren nur noch auf relevante Entity-Änderungen (maximale Performance, kein Flicker)
     ```
 
 

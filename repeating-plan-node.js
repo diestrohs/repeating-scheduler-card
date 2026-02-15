@@ -22,14 +22,29 @@ class RepeatingPlanNode extends LitElement {
   ];
 
   willUpdate(changed) {
-    // Nur neu bauen, wenn sich plan.index oder helpers-Referenz ändert
-    if (!this._cards || changed.has("helpers") || (changed.has("plan") && changed.get("plan")?.index !== this.plan?.index)) {
+    // Neu bauen, wenn helpers, plan oder plan.entities sich ändern
+    const planChanged = changed.has("plan") &&
+      JSON.stringify(changed.get("plan")?.entities) !== JSON.stringify(this.plan?.entities);
+
+    if (!this._cards || changed.has("helpers") || planChanged) {
       if (this.helpers && this.plan) {
         this._cards = this.createCards();
+        // Karte nach Entities indexieren
+        this._cardMap = {};
+        this._cards.forEach(c => {
+          const ent = c?.entity;
+          if (ent) this._cardMap[ent] = c;
+        });
       }
     }
-    if (changed.has("hass") && this._cards) {
-      this._cards.forEach(c => c.hass = this.hass);
+
+    // Nur hass auf relevante Cards propagieren
+    if (changed.has("hass") && this._cards && this.plan?.entities) {
+      const changedHass = changed.get("hass");
+      const relevantChanged = Object.values(this.plan.entities).some(eid => changedHass?.[eid] !== undefined);
+      if (relevantChanged) {
+        Object.values(this._cardMap).forEach(c => c.hass = this.hass);
+      }
     }
   }
 
