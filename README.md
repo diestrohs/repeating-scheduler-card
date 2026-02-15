@@ -1,3 +1,21 @@
+## Abhängigkeiten
+
+Diese Card benötigt folgende Custom Cards, die separat installiert werden müssen:
+
+- **[multiselect-dropdown](https://github.com/rogro82/hass-custom-multiselect-dropdown)**
+    - Für die Auswahl der Wochentage (`custom:multiselect-dropdown`)
+- **[time-spinner-card](https://github.com/amaximus/time-spinner-card)**
+    - Für die Zeitauswahl (`custom:time-spinner-card`)
+- **[card-mod](https://github.com/thomasloven/lovelace-card-mod)**
+    - Für individuelles Styling der Subcards
+- **Home Assistant Core Tile Card** (ab 2023.11, für SoC/Schalter)
+    - Wird für SoC und Aktiv-Status verwendet (`type: tile`)
+
+**Installation:**
+1. Die oben genannten Custom Cards gemäß deren Dokumentation installieren (meist via HACS oder manuell in `config/www/`)
+2. Home Assistant neustarten und ggf. Ressourcen im Frontend einbinden
+3. Erst dann die Repeating Scheduler Card wie oben beschrieben einbinden
+
 
 # Repeating Scheduler Card
 
