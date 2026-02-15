@@ -85,9 +85,6 @@ class RepeatingSchedulerCard extends LitElement {
     this._helpers = await window.loadCardHelpers();
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-  }
 
 
 
