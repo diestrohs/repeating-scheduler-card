@@ -1,13 +1,15 @@
+
 # Repeating Scheduler Card
 
-Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende Ladepläne.
+Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende Ladepläne – 100% Entity-Driven, keine Polls, keine Backend-WS nötig.
 
 ## Features
-- Zero-Scan Architektur (keine Entity-Scans, sofortige Updates)
-- WebSocket- und Event-Driven
+- 100% Entity-Driven: Card erkennt neue/löschte Pläne sofort (Entity-Topology-Detection)
+- Zero-Scan Architektur: keine Polls, keine Backend-WS nötig
+- Echtzeit-Updates: State-Änderungen und Entity-Änderungen werden sofort reflektiert
 - Modular: PlanNode-Komponenten, Shared Styles
 - Statische, performante CSS-Styles (keine dynamische Injektion)
-- Kompatibel mit HA Core Patterns
+- Kompatibel mit HA Core Patterns (wie Energy Dashboard, Mushroom Auto Entities)
 
 ## Dateien
 - repeating-scheduler-card.js – Hauptkomponente
@@ -24,20 +26,24 @@ Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende La
 3. Card im Dashboard hinzufügen:
    ```yaml
    type: custom:repeating-scheduler-card
-    vehicle_entity: select.evcc_garage_vehicle_name
-    # vehicle_attribute: vehicle.evccName # optional, falls Entity-State nicht gewünschtes Fahrzeug liefert
-    pattern:
-       weekdays: text.evcc_{vehicle}_repeating_plan_{index}_weekdays
-       time: time.evcc_{vehicle}_repeating_plan_{index}_time
-       soc: number.evcc_{vehicle}_repeating_plan_{index}_soc
-       active: switch.evcc_{vehicle}_repeating_plan_{index}_active
-    connection_type: scan # oder websocket
-    ws_domain: evcc_scheduler
-    add_service: evcc_scheduler.set_repeating_plan # scan: Service, websocket: WebSocket-API
-    delete_service: evcc_scheduler.del_repeating_plan # scan: Service, websocket: WebSocket-API
+   vehicle_entity: select.evcc_garage_vehicle_name
+   # vehicle_attribute: vehicle.evccName # optional, falls Entity-State nicht gewünschtes Fahrzeug liefert
+   pattern:
+     weekdays: text.evcc_{vehicle}_repeating_plan_{index}_weekdays
+     time: time.evcc_{vehicle}_repeating_plan_{index}_time
+     soc: number.evcc_{vehicle}_repeating_plan_{index}_soc
+     active: switch.evcc_{vehicle}_repeating_plan_{index}_active
+   connection_type: scan # oder websocket
+   ws_domain: evcc_scheduler
+   add_service: evcc_scheduler.set_repeating_plan # scan: Service, websocket: WebSocket-API
+   delete_service: evcc_scheduler.del_repeating_plan # scan: Service, websocket: WebSocket-API
    ```
 
-## Entwicklung
+
+## Architektur & Entwicklung
+
+- Entity-Topology-Detection: Card erkennt automatisch, wenn Plan-Entities hinzugefügt oder gelöscht werden (kein Polling, keine Backend-WS nötig)
+- State-Änderungen werden wie gewohnt über hass-Objekt propagiert (Home Assistant WebSocket API)
 - Umschaltung zwischen scan und websocket über connection_type
 - Fahrzeugerkennung: vehicle_attribute optional, sonst Entity-State
 - Hinzufügen/Löschen: scan → Service, websocket → WebSocket-API
