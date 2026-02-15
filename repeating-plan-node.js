@@ -107,7 +107,7 @@ class RepeatingPlanNode extends LitElement {
             <ha-icon icon="mdi:trash-can-outline"></ha-icon>
           </ha-icon-button>
         </div>
-        ${this._cards}
+        ${this._cards.map(card => html`${card}`)}
       </div>
     `;
   }

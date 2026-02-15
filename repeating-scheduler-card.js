@@ -28,6 +28,7 @@ class RepeatingSchedulerCard extends LitElement {
         const patterns = this.buildPatterns(vehicle);
         const plans = {};
         Object.values(this.hass.states).forEach(entity => {
+          if (!entity.entity_id.includes(vehicle)) return;
           for (const [type, regex] of Object.entries(patterns)) {
             const match = entity.entity_id.match(regex);
             if (match) {
@@ -71,8 +72,6 @@ class RepeatingSchedulerCard extends LitElement {
 
   constructor() {
     super();
-    this._plans = [];
-    this._bootstrapped = false;
   }
 
   setConfig(config) {
@@ -95,34 +94,11 @@ class RepeatingSchedulerCard extends LitElement {
 
 
 
-  updated(changed) {
-    if (!changed.has("hass")) return;
-    const vehicle = this.getVehicle();
-    if (!vehicle) return;
 
-    const prefix = this._getPlanPrefix(vehicle);
-    const relevantIds = [];
-    for (const id in this.hass.states) {
-      if (id.includes(prefix)) {
-        relevantIds.push(id);
-      }
-    }
-    const topology = relevantIds.sort().join("|");
-    if (topology !== this._entityTopology) {
-      this._entityTopology = topology;
-      this._plans = this.collectPlans(vehicle);
-      this.requestUpdate();
-    }
-
-    // re-propagate hass to all plan-nodes
-    this.renderRoot.querySelectorAll("repeating-plan-node").forEach(node => {
-      node.hass = this.hass;
-    });
-  }
 
   render() {
     const vehicle = this.getVehicle();
-    const plans = this._plans;
+    const plans = vehicle ? this.collectPlans(vehicle) : [];
     return html`
       <ha-card>
         <div class="title">Repeating Scheduler</div>
