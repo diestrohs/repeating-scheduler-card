@@ -1,3 +1,5 @@
+// Version: 0.0.7
+
 // Zentrale Style-Konstanten für Card-Mod Styling
 
 export const DROPDOWN_STYLE = `

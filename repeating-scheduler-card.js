@@ -1,4 +1,3 @@
-
 import { LitElement, html } from "https://unpkg.com/lit@2.8.0/index.js?module";
 import { repeat } from "https://unpkg.com/lit@2.8.0/directives/repeat.js?module";
 import { schedulerSharedStyles } from "./repeating-scheduler-styles.js";

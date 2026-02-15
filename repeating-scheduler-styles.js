@@ -1,3 +1,4 @@
+// Version: 0.0.7
 import { css } from "https://unpkg.com/lit@2.8.0/index.js?module";
 
 export const schedulerSharedStyles = css`
