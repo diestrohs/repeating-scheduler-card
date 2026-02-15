@@ -3,6 +3,10 @@ import { LitElement, html, css } from "https://unpkg.com/lit@2.8.0/index.js?modu
 import { schedulerSharedStyles } from "./repeating-scheduler-styles.js";
 
 class RepeatingPlanNode extends LitElement {
+  constructor() {
+    super();
+    this._cards = null;
+  }
   static properties = {
     hass: {},
     plan: {},
@@ -18,8 +22,11 @@ class RepeatingPlanNode extends LitElement {
   ];
 
   willUpdate(changed) {
-    if (((!this._cards && this.helpers && this.plan) || changed.has("plan")) && this.helpers && this.plan) {
-      this._cards = this.createCards();
+    // Nur neu bauen, wenn sich plan.index oder helpers-Referenz ändert
+    if (!this._cards || changed.has("helpers") || (changed.has("plan") && changed.get("plan")?.index !== this.plan?.index)) {
+      if (this.helpers && this.plan) {
+        this._cards = this.createCards();
+      }
     }
     if (changed.has("hass") && this._cards) {
       this._cards.forEach(c => c.hass = this.hass);

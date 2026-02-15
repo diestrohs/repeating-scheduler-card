@@ -47,8 +47,8 @@ Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende La
 - Hinzufügen/Löschen: Services können optional in der Config überschrieben werden (add_service, delete_service)
 - Styles werden als JS-Konstanten in den Komponenten verwaltet
 
-### Optional: Stateless Card
-Die Card kann komplett ohne eigenen State (_plans, _entityTopology) betrieben werden und leitet alles direkt im render() ab (maximale Einfachheit, keine Lifecycle-Logik).
+### Rendering-Optimierung & Flacker-Fix
+Die Card ist stateless, aber die dynamisch erzeugten Card-Elemente (PlanNode) werden intern gecached und nur bei relevanter Änderung neu gebaut. Dadurch bleibt das UI stabil und performant – card_mod wird nicht unnötig neu angewendet.
 
 ## Lizenz
 MIT
