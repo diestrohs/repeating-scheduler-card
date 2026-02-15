@@ -1,54 +1,4 @@
-// Style-Konstante für tile-SoC (Slider)
-const TILE_SOC_STYLE = `
-  ha-card {
-    background: none;
-    border: none;
-    box-shadow: none;
-    border: none;
-  }
-  ha-state-icon {
-    color: #44739E !important;
-  }
-  hui-card-features$ hui-card-feature$ hui-numeric-input-card-feature$ ha-control-slider$ .slider {
-    height: 35px !important;
-    --control-slider-color: var(--primary-color) !important;
-    --control-slider-background: var(--primary-color) !important;
-    --control-slider-background-opacity: 0.25;
-  }
-`;
-// Style-Konstante für custom:time-spinner-card
-const TIME_SPINNER_STYLE = `
-  ha-card {
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0px !important;
-    margin: 0px 0px 0px -8px;
-  }
-  .name {
-    margin-inline-start: -4px !important;
-  }
-  button span {
-    display: none;
-  }
-  .time-btn {
-    min-height: 40px !important;
-    height: 40px !important;
-    padding: 0px 0px 0px !important;
-    border-radius: 12px !important;
-    overflow: hidden;
-  }
-`;
-// Style-Konstante für custom:multiselect-dropdown
-const DROPDOWN_STYLE = `
-  ha-card {
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-  }
-  .row .icon { margin-left:-16px !important; }
-  .row .name { margin-left:-8px !important; }
-  .row .value { border-radius:12px !important; }
-`;
+import { DROPDOWN_STYLE, TIME_SPINNER_STYLE, TILE_SOC_STYLE, TILE_SWITCH_STYLE } from "./repeating-card-mod-styles.js";
 import { LitElement, html, css } from "https://unpkg.com/lit@2.8.0/index.js?module";
 import { schedulerSharedStyles } from "./repeating-scheduler-styles.js";
 
@@ -68,7 +18,7 @@ class RepeatingPlanNode extends LitElement {
   ];
 
   willUpdate(changed) {
-    if (!this._cards && this.helpers && this.plan) {
+    if (((!this._cards && this.helpers && this.plan) || changed.has("plan")) && this.helpers && this.plan) {
       this._cards = this.createCards();
     }
     if (changed.has("hass") && this._cards) {
@@ -77,18 +27,6 @@ class RepeatingPlanNode extends LitElement {
   }
 
   createCards() {
-// Style-Konstante für tile-Switch (active)
-const TILE_SWITCH_STYLE = `
-  ha-state-icon {
-    color: #44739E;
-  }
-  ha-card {
-    background: none;
-    border: none;
-    box-shadow: none;
-    border: none;
-  }
-`;
     const cfgs = [];
     const e = this.plan.entities;
     if (e.weekdays)

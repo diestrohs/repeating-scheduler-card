@@ -69,15 +69,16 @@ class RepeatingSchedulerCard extends LitElement {
   constructor() {
     super();
     this._plans = [];
-    this._wsUnsub = null;
+    this._bootstrapped = false;
   }
 
   setConfig(config) {
+    // Entferne WebSocket-Parameter aus der Config
+    const { connection_type, ws_domain, ...rest } = config;
     this.config = {
-      ws_domain: "evcc_scheduler",
       add_service: "evcc_scheduler.set_repeating_plan",
       delete_service: "evcc_scheduler.del_repeating_plan",
-      ...config
+      ...rest
     };
   }
 
@@ -87,50 +88,25 @@ class RepeatingSchedulerCard extends LitElement {
 
   async firstUpdated() {
     this._helpers = await window.loadCardHelpers();
-    this._planContainer = this.renderRoot.querySelector("#plans");
-    if (this.hass?.connection) {
-      this._wsUnsub = await this.hass.connection.subscribeMessage(
-        (msg) => this._handleWS(msg),
-        { type: `${this.config.ws_domain}/subscribe_plans` }
-      );
-    }
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._wsUnsub?.();
   }
 
-  _handleWS(msg) {
-    if (!msg?.type) return;
-    if (msg.type === "evcc_scheduler/plans_changed") {
-      this._replaceAllPlans(msg.plans);
-    }
-    if (msg.type === "evcc_scheduler/plan_added") {
-      this._attachPlan(msg.plan);
-    }
-    if (msg.type === "evcc_scheduler/plan_removed") {
-      this._removePlan(msg.index);
-    }
-  }
 
-  _replaceAllPlans(plans) {
-    this._plans = plans;
-    this.requestUpdate();
-  }
-
-  _attachPlan(plan) {
-    this._plans = [...this._plans, plan];
-    this.requestUpdate();
-  }
-
-  _removePlan(index) {
-    this._plans = this._plans.filter(p => p.index !== index);
-    this.requestUpdate();
-  }
 
   updated(changed) {
     if (!changed.has("hass")) return;
+    // Bootstrap: Pläne initial aus Entities extrahieren
+    if (!this._bootstrapped) {
+      const vehicle = this.getVehicle();
+      if (vehicle) {
+        this._plans = this.collectPlans(vehicle);
+        this._bootstrapped = true;
+        this.requestUpdate();
+      }
+    }
     // re-propagate hass to all plan-nodes
     this.renderRoot.querySelectorAll("repeating-plan-node").forEach(node => {
       node.hass = this.hass;
@@ -139,8 +115,7 @@ class RepeatingSchedulerCard extends LitElement {
 
   render() {
     const vehicle = this.getVehicle();
-    // Pläne aus Entities extrahieren (Zero-Scan)
-    const plans = vehicle ? this.collectPlans(vehicle) : [];
+    const plans = this._plans;
     return html`
       <ha-card>
         <div class="title">Repeating Scheduler</div>
