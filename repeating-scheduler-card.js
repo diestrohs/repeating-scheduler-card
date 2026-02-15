@@ -1,5 +1,6 @@
 
 import { LitElement, html } from "https://unpkg.com/lit@2.8.0/index.js?module";
+import { repeat } from "https://unpkg.com/lit@2.8.0/directives/repeat.js?module";
 import { schedulerSharedStyles } from "./repeating-scheduler-styles.js";
 import "./repeating-plan-node.js";
 
@@ -27,17 +28,19 @@ class RepeatingSchedulerCard extends LitElement {
       collectPlans(vehicle) {
         const patterns = this.buildPatterns(vehicle);
         const plans = {};
-        Object.values(this.hass.states).forEach(entity => {
-          if (!entity.entity_id.includes(vehicle)) return;
+        const states = this.hass.states;
+        for (const id in states) {
+          const entity = states[id];
+          if (!id.includes(vehicle)) continue;
           for (const [type, regex] of Object.entries(patterns)) {
-            const match = entity.entity_id.match(regex);
+            const match = id.match(regex);
             if (match) {
               const index = match[1];
               if (!plans[index]) plans[index] = {};
-              plans[index][type] = entity.entity_id;
+              plans[index][type] = id;
             }
           }
-        });
+        }
         return Object.entries(plans).sort((a, b) => Number(a[0]) - Number(b[0])).map(([index, entities]) => ({ index, entities }));
       }
     getVehicle() {
@@ -107,15 +110,19 @@ class RepeatingSchedulerCard extends LitElement {
             ? html`<div class="info">Kein Fahrzeug ausgewählt oder nicht erkannt.</div>`
             : plans.length === 0
               ? html`<div class="info">Keine Pläne gefunden.</div>`
-              : plans.map(plan => html`
-                  <repeating-plan-node
-                    .plan=${plan}
-                    .helpers=${this._helpers}
-                    .hass=${this.hass}
-                    .evccName=${this.getEvccName()}
-                    @delete-plan=${e => this._deletePlan(e.detail)}
-                  ></repeating-plan-node>
-                `)
+              : repeat(
+                  plans,
+                  plan => plan.index,
+                  plan => html`
+                    <repeating-plan-node
+                      .plan=${plan}
+                      .helpers=${this._helpers}
+                      .hass=${this.hass}
+                      .evccName=${this.getEvccName()}
+                      @delete-plan=${e => this._deletePlan(e.detail)}
+                    ></repeating-plan-node>
+                  `
+                )
           }
         </div>
         <button
