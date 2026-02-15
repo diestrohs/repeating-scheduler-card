@@ -17,7 +17,10 @@ Diese Card benötigt folgende Custom Cards, die separat installiert werden müss
 3. Erst dann die Repeating Scheduler Card wie oben beschrieben einbinden
 
 
+
 # Repeating Scheduler Card
+
+Visualisiert und verwaltet die Ladepläne des [evcc_scheduler](https://github.com/diestrohs/evcc_scheduler) in Home Assistant. Die Card zeigt alle Pläne an, ermöglicht deren Bearbeitung und Löschen – und steuert damit indirekt die Weitergabe der Pläne an [evcc](https://github.com/evcc-io/evcc) über den evcc_scheduler.
 
 Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende Ladepläne – 100% Entity-Driven, keine Polls, keine Backend-WS nötig.
 
