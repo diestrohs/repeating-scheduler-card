@@ -4,9 +4,9 @@
 Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende Ladepläne – 100% Entity-Driven, keine Polls, keine Backend-WS nötig.
 
 ## Features
-- 100% Entity-Driven: Card erkennt neue/löschte Pläne sofort (Entity-Topology-Detection)
-- Zero-Scan Architektur: keine Polls, keine Backend-WS nötig
-- Echtzeit-Updates: State-Änderungen und Entity-Änderungen werden sofort reflektiert
+- 100% Entity-Driven: Card erkennt neue/löschte Pläne sofort (Entity-Prefix-Detection, keine Scans)
+- Zero-Scan Architektur: keine Polls, keine Backend-WS, keine Events nötig
+- Echtzeit-Updates: State- und Entity-Änderungen werden sofort reflektiert
 - Modular: PlanNode-Komponenten, Shared Styles
 - Statische, performante CSS-Styles (keine dynamische Injektion)
 - Kompatibel mit HA Core Patterns (wie Energy Dashboard, Mushroom Auto Entities)
@@ -39,11 +39,14 @@ Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende La
 
 ## Architektur & Entwicklung
 
-- Entity-Topology-Detection: Card erkennt automatisch, wenn Plan-Entities hinzugefügt oder gelöscht werden (kein Polling, keine Backend-WS nötig)
+- Entity-Prefix-Detection: Card prüft nur Entities mit passendem Prefix (z.B. evcc_{vehicle}_repeating_plan_), kein globaler Entity-Scan mehr
 - State-Änderungen werden wie gewohnt über hass-Objekt propagiert (Home Assistant WebSocket API)
 - Fahrzeugerkennung: vehicle_attribute optional, sonst Entity-State
-- Hinzufügen/Löschen: scan → Service, websocket → WebSocket-API
+- Hinzufügen/Löschen: Services sind fest im Code, keine Config nötig
 - Styles werden als JS-Konstanten in den Komponenten verwaltet
+
+### Optional: Stateless Card
+Die Card kann komplett ohne eigenen State (_plans, _entityTopology) betrieben werden und leitet alles direkt im render() ab (maximale Einfachheit, keine Lifecycle-Logik).
 
 ## Lizenz
 MIT
