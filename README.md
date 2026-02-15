@@ -1,3 +1,8 @@
+## Release 0.0.9
+- Bugfix: Lit Timing – hass-Propagation erfolgt jetzt nach dem Render mit updateComplete
+- Child Cards erhalten garantiert immer den aktuellen State
+- Kein Dashboard Reload mehr nötig, sofortige Live-Updates
+
 ## Release 0.0.8
 - Bugfix: hass-Propagation in PlanNode jetzt exakt wie im stabilen Stand (Commit 1242a6c)
 - Child Cards werden bei jeder Entity-Änderung zuverlässig aktualisiert

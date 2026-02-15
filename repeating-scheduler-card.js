@@ -115,10 +115,14 @@ class RepeatingSchedulerCard extends LitElement {
       this._plans = this.collectPlans(vehicle);
     }
 
-    // ---- State propagation (IMMER!)
-    this.renderRoot
-      .querySelectorAll("repeating-plan-node")
-      .forEach(node => node.hass = this.hass);
+    // ---- State propagation (IMMER!) nach Render
+    this.updateComplete.then(() => {
+      this.renderRoot
+        .querySelectorAll("repeating-plan-node")
+        .forEach(node => {
+          node.hass = this.hass;
+        });
+    });
   }
 
   render() {
