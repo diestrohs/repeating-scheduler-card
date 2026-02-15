@@ -1,3 +1,9 @@
+## Release 0.0.8
+- Bugfix: hass-Propagation in PlanNode jetzt exakt wie im stabilen Stand (Commit 1242a6c)
+- Child Cards werden bei jeder Entity-Änderung zuverlässig aktualisiert
+- Dashboard-Reload nicht mehr nötig
+- Architektur entspricht dem optimalen HA-Pattern
+
 
 # Repeating Scheduler Card
 
