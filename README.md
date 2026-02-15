@@ -1,3 +1,10 @@
+## Release 0.1.0
+- Plan-Versionierung: Sofortige UI-Updates bei jeder State-Änderung, ohne DOM-Neuaufbau
+- Lazy Rendering: Pläne werden erst bei Sichtbarkeit gebaut (IntersectionObserver)
+- Kein querySelectorAll mehr nötig, 100% Lit-Property-Flow
+- HASS Slicing: Card reagiert nur noch auf relevante Entity-Änderungen
+- Maximale Performance auch bei vielen Plänen
+
 ## Release 0.0.9
 - Bugfix: Lit Timing – hass-Propagation erfolgt jetzt nach dem Render mit updateComplete
 - Child Cards erhalten garantiert immer den aktuellen State
