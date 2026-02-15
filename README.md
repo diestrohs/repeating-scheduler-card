@@ -24,17 +24,19 @@ Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende La
    type: module
    ```
 3. Card im Dashboard hinzufügen:
-   ```yaml
-   type: custom:repeating-scheduler-card
-   vehicle_entity: select.evcc_garage_vehicle_name
-   # vehicle_attribute: vehicle.evccName # optional, falls Entity-State nicht gewünschtes Fahrzeug liefert
-   pattern:
-     weekdays: text.evcc_{vehicle}_repeating_plan_{index}_weekdays
-     time: time.evcc_{vehicle}_repeating_plan_{index}_time
-     soc: number.evcc_{vehicle}_repeating_plan_{index}_soc
-     active: switch.evcc_{vehicle}_repeating_plan_{index}_active
-   # (keine weiteren Parameter nötig)
-   ```
+    ```yaml
+    type: custom:repeating-scheduler-card
+    vehicle_entity: select.evcc_garage_vehicle_name
+    # vehicle_attribute: vehicle.evccName # optional, falls Entity-State nicht gewünschtes Fahrzeug liefert
+    pattern:
+       weekdays: text.evcc_{vehicle}_repeating_plan_{index}_weekdays
+       time: time.evcc_{vehicle}_repeating_plan_{index}_time
+       soc: number.evcc_{vehicle}_repeating_plan_{index}_soc
+       active: switch.evcc_{vehicle}_repeating_plan_{index}_active
+    # Optional für maximale Flexibilität (Standard siehe Code):
+    # add_service: evcc_scheduler.set_repeating_plan
+    # delete_service: evcc_scheduler.del_repeating_plan
+    ```
 
 
 ## Architektur & Entwicklung
@@ -42,7 +44,7 @@ Eine hochperformante, reaktive Home Assistant Custom Card für wiederkehrende La
 - Entity-Prefix-Detection: Card prüft nur Entities mit passendem Prefix (z.B. evcc_{vehicle}_repeating_plan_), kein globaler Entity-Scan mehr
 - State-Änderungen werden wie gewohnt über hass-Objekt propagiert (Home Assistant WebSocket API)
 - Fahrzeugerkennung: vehicle_attribute optional, sonst Entity-State
-- Hinzufügen/Löschen: Services sind fest im Code, keine Config nötig
+- Hinzufügen/Löschen: Services können optional in der Config überschrieben werden (add_service, delete_service)
 - Styles werden als JS-Konstanten in den Komponenten verwaltet
 
 ### Optional: Stateless Card

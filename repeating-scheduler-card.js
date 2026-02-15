@@ -4,6 +4,9 @@ import { schedulerSharedStyles } from "./repeating-scheduler-styles.js";
 import "./repeating-plan-node.js";
 
 class RepeatingSchedulerCard extends LitElement {
+        _getPlanPrefix(vehicle) {
+          return `evcc_${vehicle}_repeating_plan_`;
+        }
       // Hilfsfunktion: Escape für Regex-Sonderzeichen
       _escapeRegex(str) {
         return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -73,8 +76,12 @@ class RepeatingSchedulerCard extends LitElement {
   }
 
   setConfig(config) {
-    // Nur relevante UI-Parameter übernehmen
-    this.config = { ...config };
+    // add_service und delete_service optional aus Config übernehmen, sonst Defaults
+    this.config = {
+      add_service: config.add_service || "evcc_scheduler.set_repeating_plan",
+      delete_service: config.delete_service || "evcc_scheduler.del_repeating_plan",
+      ...config
+    };
   }
 
   getEvccName() {
@@ -93,13 +100,16 @@ class RepeatingSchedulerCard extends LitElement {
     const vehicle = this.getVehicle();
     if (!vehicle) return;
 
-    // Entity topology detection: hash of all relevant entity_ids
-    const entityIds = Object.keys(this.hass.states)
-      .filter(id => id.includes(vehicle))
-      .sort()
-      .join("|");
-    if (entityIds !== this._entityTopology) {
-      this._entityTopology = entityIds;
+    const prefix = this._getPlanPrefix(vehicle);
+    const relevantIds = [];
+    for (const id in this.hass.states) {
+      if (id.includes(prefix)) {
+        relevantIds.push(id);
+      }
+    }
+    const topology = relevantIds.sort().join("|");
+    if (topology !== this._entityTopology) {
+      this._entityTopology = topology;
       this._plans = this.collectPlans(vehicle);
       this.requestUpdate();
     }
@@ -134,17 +144,20 @@ class RepeatingSchedulerCard extends LitElement {
         </div>
         <button
           class="add-btn"
-          @click=${() => this.hass.callService(
-            "evcc_scheduler",
-            "set_repeating_plan",
-            {
-              vehicle_id: this.getEvccName(),
-              time: "07:00",
-              weekdays: [1,2,3,4,5],
-              soc: 80,
-              active: true
-            }
-          )}
+          @click=${() => {
+            const [addDomain, addService] = this.config.add_service.split(".");
+            this.hass.callService(
+              addDomain,
+              addService,
+              {
+                vehicle_id: this.getEvccName(),
+                time: "07:00",
+                weekdays: [1,2,3,4,5],
+                soc: 80,
+                active: true
+              }
+            );
+          }}
         >
           <ha-icon icon="mdi:plus"></ha-icon>
           Plan hinzufügen
@@ -154,9 +167,10 @@ class RepeatingSchedulerCard extends LitElement {
   }
 
   _deletePlan(plan) {
+    const [delDomain, delService] = this.config.delete_service.split(".");
     this.hass.callService(
-      "evcc_scheduler",
-      "del_repeating_plan",
+      delDomain,
+      delService,
       {
         vehicle_id: this.getEvccName(),
         plan_index: Number(plan.index)
