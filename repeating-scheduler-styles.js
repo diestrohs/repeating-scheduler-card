@@ -1,14 +1,16 @@
-// Version: 0.1.0
+// Version: 0.1.1
 import { css } from "https://unpkg.com/lit@2.8.0/index.js?module";
 
 export const schedulerSharedStyles = css`
   ha-card {
     padding: 4px;
   }
+
   .title {
     margin-bottom: 16px;
     font-size: 1.4rem;
   }
+
   .plan {
     border-radius: 12px;
     padding: 12px;
@@ -17,9 +19,11 @@ export const schedulerSharedStyles = css`
     background: var(--card-background-color);
     transition: all 0.2s ease;
   }
+
   .plan:hover {
     border-color: var(--primary-color);
   }
+
   .plan-header {
     display: flex;
     justify-content: space-between;
@@ -27,13 +31,16 @@ export const schedulerSharedStyles = css`
     margin-bottom: 12px;
     font-weight: 500;
   }
+
   ha-icon-button.delete-btn ha-icon {
     color: var(--primary-color);
   }
+
   .info {
     padding: 16px;
     opacity: 0.7;
   }
+
   .add-btn {
     width: 100%;
     margin-top: 16px;
@@ -51,6 +58,7 @@ export const schedulerSharedStyles = css`
     cursor: pointer;
     transition: background 0.2s;
   }
+
   .add-btn:hover {
     background: var(--success-color, #2e7d32);
   }

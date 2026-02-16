@@ -1,12 +1,15 @@
-import { DROPDOWN_STYLE, TIME_SPINNER_STYLE, TILE_SOC_STYLE, TILE_SWITCH_STYLE } from "./repeating-card-mod-styles.js";
+import {
+  DROPDOWN_STYLE,
+  TIME_SPINNER_STYLE,
+  TILE_SOC_STYLE,
+  TILE_SWITCH_STYLE
+} from "./repeating-card-mod-styles.js";
+
 import { LitElement, html, css } from "https://unpkg.com/lit@2.8.0/index.js?module";
 import { schedulerSharedStyles } from "./repeating-scheduler-styles.js";
 
 class RepeatingPlanNode extends LitElement {
-  constructor() {
-    super();
-    this._cards = null;
-  }
+
   static properties = {
     hass: {},
     plan: {},
@@ -16,35 +19,19 @@ class RepeatingPlanNode extends LitElement {
 
   static styles = [
     schedulerSharedStyles,
-    css`
-      :host { display: block; }
-    `
+    css`:host{display:block;}`
   ];
-
-  willUpdate(changed) {
-    // Card-Caching nur bei helpers- oder plan.index-Änderung
-    const planIndexChanged = changed.has("plan") && changed.get("plan")?.index !== this.plan?.index;
-    if (!this._cards || changed.has("helpers") || planIndexChanged) {
-      if (this.helpers && this.plan) {
-        this._cards = this.createCards();
-      }
-    }
-    // hass-Propagation: immer an alle Cards
-    if (changed.has("hass") && this._cards) {
-      this._cards.forEach(c => c.hass = this.hass);
-    }
-  }
 
   createCards() {
     const cfgs = [];
     const e = this.plan.entities;
+
     if (e.weekdays)
       cfgs.push({
         type: "custom:multiselect-dropdown",
         text_entity: e.weekdays,
         mode: "text",
         name: "Wochentage",
-        icon_color: "#44739e",
         item_summarize: true,
         short_name: 2,
         options: [
@@ -58,38 +45,39 @@ class RepeatingPlanNode extends LitElement {
         ],
         card_mod: { style: DROPDOWN_STYLE }
       });
+
     if (e.time)
       cfgs.push({
         type: "custom:time-spinner-card",
         entity: e.time,
         name: "Zeit",
-        icon_color: "#44739e",
         minute_step: 5,
         card_mod: { style: TIME_SPINNER_STYLE }
       });
+
     if (e.soc)
       cfgs.push({
         type: "tile",
         entity: e.soc,
         name: "SoC",
-        color: "var(--primary-color)",
         features_position: "inline",
         features: [{ type: "numeric-input", style: "slider" }],
         card_mod: { style: TILE_SOC_STYLE }
       });
+
     if (e.active)
       cfgs.push({
         type: "tile",
         entity: e.active,
         name: "Aktiv",
         hide_state: true,
-        color: "var(--primary-color)",
         features_position: "inline",
         features: [{ type: "toggle" }],
         tap_action: { action: "none" },
         icon_tap_action: { action: "none" },
         card_mod: { style: TILE_SWITCH_STYLE }
       });
+
     return cfgs.map(cfg => {
       const el = this.helpers.createCardElement(cfg);
       el.hass = this.hass;
@@ -98,14 +86,16 @@ class RepeatingPlanNode extends LitElement {
   }
 
   render() {
-    if (!this._cards) return html``;
+    if (!this.helpers || !this.plan) return html``;
+
+    const cards = this.createCards();
+
     return html`
-      <div class="plan" part="plan">
-        <div class="plan-header" part="plan-header">
+      <div class="plan">
+        <div class="plan-header">
           <div>Plan ${this.plan.index}</div>
           <ha-icon-button
             class="delete-btn"
-            part="delete-button"
             @click=${() =>
               this.dispatchEvent(new CustomEvent("delete-plan", {
                 detail: this.plan,
@@ -116,7 +106,8 @@ class RepeatingPlanNode extends LitElement {
             <ha-icon icon="mdi:trash-can-outline"></ha-icon>
           </ha-icon-button>
         </div>
-        ${this._cards.map(card => html`${card}`)}
+
+        ${cards.map(card => html`${card}`)}
       </div>
     `;
   }

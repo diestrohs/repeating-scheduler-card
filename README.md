@@ -1,3 +1,10 @@
+## Release 0.1.1
+- Architektur-Refactor: Kein querySelectorAll mehr, 100% Lit-Property-Flow
+- Plan-Versionierung: Sofortige UI-Updates bei jeder State-Änderung, ohne DOM-Neuaufbau
+- Lazy Rendering: Pläne werden erst bei Sichtbarkeit gebaut (IntersectionObserver)
+- HASS Slicing: Card reagiert nur noch auf relevante Entity-Änderungen
+- Maximale Performance auch bei vielen Plänen
+
 ## Release 0.1.0
 - Plan-Versionierung: Sofortige UI-Updates bei jeder State-Änderung, ohne DOM-Neuaufbau
 - Lazy Rendering: Pläne werden erst bei Sichtbarkeit gebaut (IntersectionObserver)
