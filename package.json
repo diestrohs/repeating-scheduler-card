@@ -1,6 +1,6 @@
 {
   "name": "repeating-scheduler-card",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "description": "Home Assistant Custom Card für wiederkehrende Ladepläne (100% Entity-Driven, Zero-Scan, kein Polling)",
   "main": "repeating-scheduler-card.js",
   "author": "diestrohs",
